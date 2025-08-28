@@ -1,5 +1,15 @@
 @use 'normalize';
-@use 'fonts';
 @use 'variables';
 @use 'utils';
 @use 'globals';
+
+.layout {
+	height: 100dvh;
+	position: relative;
+	& .form {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		translate: -50% -50%;
+	}
+}
