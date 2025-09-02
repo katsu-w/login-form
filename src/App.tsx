@@ -1,22 +1,12 @@
 import './styles/main.scss';
-import { type ChangeEvent, useState } from 'react';
+import { useRef, useState } from 'react';
 
 export function App() {
 	const [emailValue, setEmailValue] = useState<string>('');
 	const [passwordValue, setPasswordValue] = useState<string>('');
 	const [passwordRepeatValue, setPasswordRepeatValue] = useState<string>('');
 
-	const onEmailChange: (event: ChangeEvent) => void = ({ target }) => {
-		setEmailValue(target?.value);
-	};
-
-	const onPasswordChange: (event: ChangeEvent) => void = ({ target }) => {
-		setPasswordValue(target?.value);
-	};
-
-	const onPasswordRepeatChange: (event: ChangeEvent) => void = ({ target }) => {
-		setPasswordRepeatValue(target?.value);
-	};
+	const submitButton = useRef(null);
 
 	return (
 		<main className="container layout">
@@ -31,27 +21,27 @@ export function App() {
 						<input
 							className="input"
 							value={emailValue}
-							onChange={onEmailChange}
+							onChange={(e) => setEmailValue(e.target.value)}
 							name="email"
 							type="email"
 						/>
 						<input
 							className="input"
 							value={passwordValue}
-							onChange={onPasswordChange}
+							onChange={(e) => setPasswordValue(e.target.value)}
 							name="password"
 							type="password"
 						/>
 						<input
 							className="input"
 							value={passwordRepeatValue}
-							onChange={onPasswordRepeatChange}
+							onChange={(e) => setPasswordRepeatValue(e.target.value)}
 							name="password-repeat"
 							type="password"
 						/>
 					</div>
 				</div>
-				<button type="submit" className="button">
+				<button ref={submitButton} type="submit" className="button">
 					Зарегистрироваться
 				</button>
 			</form>
