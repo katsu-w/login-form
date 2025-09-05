@@ -2,7 +2,7 @@ import './styles/main.scss';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useRef /*useState*/ } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface IFormData {
 	email: string;
@@ -30,7 +30,7 @@ const schema = yup
 			.min(6, 'Пароль должен содержать от 6 символов.'),
 		passwordRepeat: yup
 			.string()
-			.required('Required')
+			.required('Введите повтор пароля')
 			.oneOf([yup.ref('password')], 'Пароли не совпадают'),
 	})
 	.required();
@@ -44,15 +44,19 @@ export function App() {
 		resolver: yupResolver(schema),
 	});
 
-	// const [email, setEmail] = useState('');
-	// const [password, setPassword] = useState('');
-	// const [passwordRepeat, setPasswordRepeat] = useState('');
+	let errorArr: string[] = [];
 
-	const emailError = errors.email?.message;
-	const passwordError = errors.password?.message;
-	const passwordRepeatError = errors.passwordRepeat?.message;
+	errors.email?.message ? errorArr.push(errors.email.message) : null;
+	errors.password?.message ? errorArr.push(errors.password.message) : null;
+	errors.passwordRepeat?.message ? errorArr.push(errors.passwordRepeat.message) : null;
 
 	const submitButton = useRef(null);
+
+	useEffect(() => {
+		if (errorArr.length === 0) {
+			submitButton.current.focus();
+		}
+	}, [errorArr]);
 
 	const onSubmit: SubmitHandler<IFormData> = (formData) => {
 		console.log(formData);
@@ -71,10 +75,6 @@ export function App() {
 						<input
 							className="input"
 							{...register('email')}
-							// value={email}
-							// onChange={(e) => {
-							// 	setEmail(e.target.value);
-							// }}
 							placeholder="example@gmail.com"
 							name="email"
 							type="email"
@@ -82,10 +82,6 @@ export function App() {
 						<input
 							className="input"
 							{...register('password')}
-							// value={password}
-							// onChange={(e) => {
-							// 	setPassword(e.target.value);
-							// }}
 							placeholder="y0uR!pAsS"
 							name="password"
 							type="password"
@@ -93,10 +89,6 @@ export function App() {
 						<input
 							className="input"
 							{...register('passwordRepeat')}
-							// value={passwordRepeat}
-							// onChange={(e) => {
-							// 	setPasswordRepeat(e.target.value);
-							// }}
 							placeholder="y0uR!pAsS"
 							name="passwordRepeat"
 							type="password"
@@ -104,16 +96,17 @@ export function App() {
 					</div>
 				</div>
 				<button
-					disabled={!!emailError || !!passwordError || !!passwordRepeatError}
+					disabled={errorArr.length > 0}
 					ref={submitButton}
 					type="submit"
 					className="button"
 				>
 					Зарегистрироваться
 				</button>
-				{emailError && <p>{emailError}</p>}
-				{passwordError && <p>{passwordError}</p>}
-				{passwordRepeatError && <p>{passwordRepeatError}</p>}
+				{errorArr.length > 0 &&
+					errorArr.map((msg) => {
+						return msg ? <p key={msg}>{msg}</p> : null;
+					})}
 			</form>
 		</main>
 	);
