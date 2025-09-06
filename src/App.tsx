@@ -50,11 +50,11 @@ export function App() {
 	errors.password?.message ? errorArr.push(errors.password.message) : null;
 	errors.passwordRepeat?.message ? errorArr.push(errors.passwordRepeat.message) : null;
 
-	const submitButton = useRef(null);
+	const submitButtonRef = useRef(null);
 
 	useEffect(() => {
 		if (errorArr.length === 0) {
-			submitButton.current.focus();
+			submitButtonRef.current?.focus();
 		}
 	}, [errorArr]);
 
@@ -97,7 +97,7 @@ export function App() {
 				</div>
 				<button
 					disabled={errorArr.length > 0}
-					ref={submitButton}
+					ref={submitButtonRef}
 					type="submit"
 					className="button"
 				>
